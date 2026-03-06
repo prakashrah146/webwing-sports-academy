@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Champions Sports Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --red: #e8001d;
+      --dark-red: #b00015;
+      --black: #080808;
+      --dark: #0f0f0f;
+      --card-bg: #141414;
+      --border: rgba(255,255,255,0.07);
+      --white: #f5f5f5;
+      --muted: rgba(245,245,245,0.5);
+      --gold: #ffbe00;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--white); font-family: 'Barlow', sans-serif; overflow-x: hidden; cursor: default; }
+
+    /* ═══ SCROLLBAR ═══ */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 2px; }
+
+    /* ═══ PAGE SYSTEM ═══ */
+    .page { display: none; animation: fadeIn 0.4s ease; }
+    .page.active { display: block; }
+    @keyframes fadeIn { from{opacity:0; transform:translateY(12px)} to{opacity:1; transform:none} }
+
+    /* ═══ NAV ═══ */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 1000;
+      background: rgba(8,8,8,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 68px;
+    }
+    .nav-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900; font-size: 1.55rem;
+      color: var(--white); letter-spacing: 1px;
+      display: flex; align-items: center; gap: 10px;
+      cursor: pointer;
+    }
+    .nav-logo .emblem {
+      width: 38px; height: 38px;
+      background: var(--red);
+      clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 900; color: #fff;
+      flex-shrink: 0;
+    }
+    .nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-links button {
+      background: none; border: none; color: var(--muted);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600; font-size: 0.95rem; letter-spacing: 1.5px;
+      text-transform: uppercase; padding: 8px 14px; cursor: pointer;
+      border-radius: 4px; transition: color 0.2s, background 0.2s;
+    }
+    .nav-links button:hover, .nav-links button.active { color: var(--white); background: rgba(255,255,255,0.07); }
+    .nav-links button.active { color: var(--red); }
+    .nav-enroll {
+      background: var(--red) !important; color: #fff !important;
+      padding: 8px 20px !important; border-radius: 4px !important;
+    }
+    .nav-enroll:hover { background: var(--dark-red) !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: 0.3s; }
+
+    /* ═══ HERO ═══ */
+    .hero {
+      min-height: 100vh; padding-top: 68px;
+      display: flex; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 70% 50%, rgba(232,0,29,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 20% 80%, rgba(232,0,29,0.07) 0%, transparent 45%),
+        linear-gradient(135deg, #080808 0%, #0f0f0f 100%);
+    }
+    /* Diagonal stripe accent */
+    .hero-stripe {
+      position: absolute; right: 0; top: 0; bottom: 0; width: 45%;
+      background: linear-gradient(135deg, transparent 30%, rgba(232,0,29,0.04) 100%);
+      border-left: 1px solid rgba(232,0,29,0.1);
+      clip-path: polygon(8% 0, 100% 0, 100% 100%, 0% 100%);
+    }
+    /* Grid */
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+    .hero-content { position: relative; z-index: 2; padding: 0 5%; max-width: 750px; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 3px;
+      color: var(--red); text-transform: uppercase;
+      margin-bottom: 22px;
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero-eyebrow::before { content: ''; display: block; width: 30px; height: 2px; background: var(--red); }
+    .hero h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(3.8rem, 10vw, 7.5rem);
+      font-weight: 900; line-height: 0.92;
+      letter-spacing: -1px; text-transform: uppercase;
+      animation: fadeUp 0.6s ease 0.1s both;
+    }
+    .hero h1 .red { color: var(--red); }
+    .hero h1 .italic { font-style: italic; }
+    .hero-desc {
+      margin: 28px 0 40px;
+      font-size: 1.05rem; color: var(--muted);
+      line-height: 1.7; max-width: 500px;
+      animation: fadeUp 0.6s ease 0.2s both;
+    }
+    .hero-btns {
+      display: flex; gap: 14px; flex-wrap: wrap;
+      animation: fadeUp 0.6s ease 0.3s both;
+    }
+    .btn-red {
+      background: var(--red); color: #fff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 1rem; letter-spacing: 1.5px;
+      text-transform: uppercase; padding: 14px 32px;
+      border: none; border-radius: 4px; cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-red:hover { background: var(--dark-red); transform: translateY(-2px); }
+    .btn-outline {
+      background: transparent; color: var(--white);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 1rem; letter-spacing: 1.5px;
+      text-transform: uppercase; padding: 13px 32px;
+      border: 1px solid rgba(255,255,255,0.25); border-radius: 4px;
+      cursor: pointer; transition: border-color 0.2s, background 0.2s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-outline:hover { border-color: var(--red); background: rgba(232,0,29,0.06); }
+    .hero-stats {
+      display: flex; gap: 48px; margin-top: 60px;
+      padding-top: 40px; border-top: 1px solid var(--border);
+      animation: fadeUp 0.6s ease 0.4s both;
+    }
+    .stat-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.8rem; font-weight: 900; color: var(--red);
+      line-height: 1;
+    }
+    .stat-label { font-size: 0.78rem; color: var(--muted); letter-spacing: 1px; margin-top: 4px; text-transform: uppercase; }
+
+    /* ═══ SECTIONS ═══ */
+    section { padding: 100px 5%; }
+    .section-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 3px;
+      color: var(--red); text-transform: uppercase;
+      display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+    }
+    .section-tag::before { content:''; display:block; width:24px; height:2px; background:var(--red); }
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 900; text-transform: uppercase; line-height: 1;
+      margin-bottom: 50px;
+    }
+    .section-title span { color: var(--red); }
+
+    /* ═══ PROGRAMS ═══ */
+    .programs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 2px; }
+    .prog-card {
+      background: var(--card-bg); padding: 42px 32px;
+      border: 1px solid var(--border);
+      position: relative; overflow: hidden;
+      transition: transform 0.3s;
+    }
+    .prog-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+      background: var(--red); transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s;
+    }
+    .prog-card:hover { transform: translateY(-4px); }
+    .prog-card:hover::after { transform: scaleX(1); }
+    .prog-icon { font-size: 2.8rem; margin-bottom: 20px; display: block; }
+    .prog-card h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 12px; letter-spacing: 0.5px;
+    }
+    .prog-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+    .prog-age {
+      display: inline-block;
+      background: rgba(232,0,29,0.12); border: 1px solid rgba(232,0,29,0.3);
+      color: var(--red); font-size: 0.72rem; letter-spacing: 1px;
+      padding: 4px 12px; border-radius: 2px; font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; text-transform: uppercase;
+    }
+
+    /* ═══ ABOUT ═══ */
+    .about-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .about-visual {
+      position: relative;
+    }
+    .about-big-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14rem; font-weight: 900;
+      color: rgba(232,0,29,0.07); line-height: 1;
+      user-select: none; position: absolute;
+      top: -40px; left: -20px; z-index: 0;
+    }
+    .about-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 4px; padding: 48px 40px;
+      position: relative; z-index: 1;
+    }
+    .about-card-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem; font-weight: 900; text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .about-card-title span { color: var(--red); }
+    .about-achievements { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 32px; }
+    .achieve-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 20px; border-radius: 3px; }
+    .achieve-num { font-family: 'Barlow Condensed', sans-serif; font-size: 2rem; font-weight: 900; color: var(--red); }
+    .achieve-text { font-size: 0.78rem; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .about-text p { font-size: 0.95rem; color: var(--muted); line-height: 1.8; margin-bottom: 20px; }
+    .about-values { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+    .value-item { display: flex; align-items: center; gap: 14px; }
+    .value-dot { width: 8px; height: 8px; background: var(--red); border-radius: 50%; flex-shrink: 0; }
+    .value-item span { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.05rem; letter-spacing: 0.5px; }
+
+    /* ═══ GALLERY ═══ */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto auto;
+      gap: 3px;
+    }
+    .gallery-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      aspect-ratio: 4/3;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4rem; position: relative; overflow: hidden;
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+    .gallery-item:hover { transform: scale(1.02); z-index: 2; }
+    .gallery-item.wide { grid-column: span 2; aspect-ratio: 2/1; }
+    .gallery-item.tall { grid-row: span 2; aspect-ratio: auto; }
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(232,0,29,0.6), transparent);
+      opacity: 0; transition: opacity 0.3s;
+      display: flex; align-items: flex-end; padding: 20px;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-caption { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1rem; letter-spacing: 1px; text-transform: uppercase; }
+    .gallery-bg {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 5rem; opacity: 0.15;
+    }
+    .gallery-emoji { position: relative; z-index: 1; font-size: 3.5rem; }
+
+    /* Colored gallery items */
+    .g1 { background: linear-gradient(135deg,#1a0a0a,#2a0808); }
+    .g2 { background: linear-gradient(135deg,#0a0a1a,#0a1225); }
+    .g3 { background: linear-gradient(135deg,#0a1a0a,#0a2010); }
+    .g4 { background: linear-gradient(135deg,#1a1a0a,#251808); }
+    .g5 { background: linear-gradient(135deg,#1a0a1a,#200820); }
+    .g6 { background: linear-gradient(135deg,#0a1a1a,#082020); }
+
+    /* ═══ CONTACT / ENQUIRY ═══ */
+    .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+    .contact-info h3 { font-family:'Barlow Condensed',sans-serif; font-size:1.8rem; font-weight:800; text-transform:uppercase; margin-bottom:24px; }
+    .contact-info p { color:var(--muted); font-size:0.9rem; line-height:1.8; margin-bottom:32px; }
+    .contact-detail { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+    .c-icon { width:42px; height:42px; background:rgba(232,0,29,0.12); border:1px solid rgba(232,0,29,0.2); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+    .c-text-top { font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:2px; color:var(--red); text-transform:uppercase; }
+    .c-text-val { font-size:0.92rem; color:var(--white); margin-top:2px; }
+    .wa-contact-btn {
+      display: flex; align-items: center; gap: 12px;
+      background: #25D366; color: #fff;
+      font-family:'Barlow Condensed',sans-serif; font-weight:700;
+      font-size:1rem; letter-spacing:1px; text-transform:uppercase;
+      padding:14px 28px; border-radius:4px; border:none;
+      cursor:pointer; margin-top:28px; text-decoration:none;
+      transition: background 0.2s, transform 0.2s;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.3);
+    }
+    .wa-contact-btn:hover { background:#1da851; transform:translateY(-2px); }
+
+    /* Form */
+    .enquiry-form { background:var(--card-bg); border:1px solid var(--border); border-radius:4px; padding:40px; }
+    .enquiry-form h3 { font-family:'Barlow Condensed',sans-serif; font-size:1.5rem; font-weight:800; text-transform:uppercase; margin-bottom:28px; }
+    .form-group { margin-bottom:18px; }
+    .form-group label { display:block; font-size:0.72rem; font-weight:700; letter-spacing:2px; color:var(--red); text-transform:uppercase; margin-bottom:8px; font-family:'Barlow Condensed',sans-serif; }
+    .form-group input, .form-group select, .form-group textarea {
+      width:100%; background:rgba(255,255,255,0.04);
+      border:1px solid var(--border); border-radius:3px;
+      color:var(--white); font-family:'Barlow',sans-serif; font-size:0.9rem;
+      padding:12px 16px; outline:none; transition:border-color 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--red); }
+    .form-group select option { background:#1a1a1a; }
+    .form-group textarea { height:100px; resize:vertical; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .submit-btn {
+      width:100%; background:var(--red); color:#fff;
+      font-family:'Barlow Condensed',sans-serif; font-weight:700;
+      font-size:1.05rem; letter-spacing:2px; text-transform:uppercase;
+      padding:14px; border:none; border-radius:4px; cursor:pointer;
+      transition: background 0.2s;
+    }
+    .submit-btn:hover { background:var(--dark-red); }
+
+    /* ═══ COACHES ═══ */
+    .coaches-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:2px; }
+    .coach-card {
+      background:var(--card-bg); border:1px solid var(--border);
+      padding:36px 28px; position:relative; overflow:hidden;
+      transition:transform 0.3s;
+    }
+    .coach-card:hover { transform:translateY(-4px); }
+    .coach-avatar {
+      width:80px; height:80px; border-radius:50%;
+      background:linear-gradient(135deg,var(--red),#ff4060);
+      display:flex; align-items:center; justify-content:center;
+      font-size:2.2rem; margin-bottom:20px;
+      border:3px solid rgba(232,0,29,0.3);
+    }
+    .coach-name { font-family:'Barlow Condensed',sans-serif; font-size:1.3rem; font-weight:800; text-transform:uppercase; margin-bottom:4px; }
+    .coach-role { font-size:0.78rem; color:var(--red); letter-spacing:1px; text-transform:uppercase; font-weight:600; margin-bottom:14px; }
+    .coach-bio { font-size:0.84rem; color:var(--muted); line-height:1.7; }
+    .coach-exp { display:inline-block; margin-top:16px; font-family:'Barlow Condensed',sans-serif; font-size:1.4rem; font-weight:900; color:var(--gold); }
+    .coach-exp span { font-size:0.7rem; color:var(--muted); font-family:'Barlow',sans-serif; font-weight:400; margin-left:4px; }
+
+    /* ═══ FOOTER ═══ */
+    footer {
+      background:var(--dark); border-top:1px solid var(--border);
+      padding:50px 5% 28px;
+    }
+    .footer-top { display:grid; grid-template-columns:2fr 1fr 1fr; gap:50px; margin-bottom:40px; }
+    .footer-brand .nav-logo { margin-bottom:16px; }
+    .footer-brand p { font-size:0.85rem; color:var(--muted); line-height:1.7; max-width:300px; }
+    .footer-col h4 { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:1rem; letter-spacing:2px; text-transform:uppercase; color:var(--red); margin-bottom:16px; }
+    .footer-col a { display:block; font-size:0.85rem; color:var(--muted); text-decoration:none; margin-bottom:10px; cursor:pointer; transition:color 0.2s; }
+    .footer-col a:hover { color:var(--white); }
+    .footer-bottom { border-top:1px solid var(--border); padding-top:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+    .footer-bottom p { font-size:0.78rem; color:var(--muted); }
+    .footer-built { font-size:0.78rem; color:var(--muted); }
+    .footer-built a { color:var(--red); text-decoration:none; }
+
+    /* ═══ WA FLOAT ═══ */
+    .wa-float {
+      position:fixed; bottom:24px; right:24px; z-index:999;
+      background:#25D366; color:#fff; width:56px; height:56px;
+      border-radius:50%; display:flex; align-items:center; justify-content:center;
+      font-size:1.5rem; text-decoration:none;
+      box-shadow:0 4px 24px rgba(37,211,102,0.45);
+      animation:wap 2.5s infinite;
+    }
+    @keyframes wap { 0%,100%{box-shadow:0 4px 24px rgba(37,211,102,0.45)} 50%{box-shadow:0 4px 40px rgba(37,211,102,0.8)} }
+
+    /* ═══ SCROLL REVEAL ═══ */
+    .reveal { opacity:0; transform:translateY(36px); transition:opacity 0.7s, transform 0.7s; }
+    .reveal.visible { opacity:1; transform:none; }
+
+    /* ═══ NOTICE BANNER ═══ */
+    .demo-notice {
+      position:fixed; top:68px; left:0; right:0; z-index:900;
+      background:var(--red); color:#fff; text-align:center;
+      font-family:'Barlow Condensed',sans-serif; font-weight:700;
+      font-size:0.85rem; letter-spacing:1.5px; padding:8px;
+    }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:none} }
+
+    /* Mobile */
+    @media (max-width:768px) {
+      .nav-links { display:none; }
+      .hamburger { display:flex; }
+      .nav-links.open { display:flex; flex-direction:column; position:fixed; top:68px; left:0; right:0; background:rgba(8,8,8,0.98); padding:20px 5%; border-bottom:1px solid var(--border); }
+      .about-layout { grid-template-columns:1fr; gap:40px; }
+      .about-big-num { font-size:8rem; }
+      .gallery-grid { grid-template-columns:1fr 1fr; }
+      .gallery-item.wide { grid-column:span 2; }
+      .gallery-item.tall { grid-row:span 1; }
+      .contact-layout { grid-template-columns:1fr; gap:40px; }
+      .footer-top { grid-template-columns:1fr; gap:32px; }
+      .hero-stats { gap:28px; }
+      section { padding:70px 5%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Demo Notice -->
+<div class="demo-notice">⚡ DEMO WEBSITE — Built by WebWings Solutions · +91 9025569406</div>
+
+<!-- WhatsApp Float -->
+<a class="wa-float" href="https://wa.me/919025569406?text=Hi!%20I%20saw%20the%20Sports%20Academy%20demo%20website.%20I%20want%20a%20similar%20one%20for%20my%20business!" target="_blank" title="Chat with WebWings">💬</a>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">
+    <div class="emblem">C</div>
+    <span>CHAMPIONS<br><span style="font-size:0.7em;font-weight:600;color:var(--muted);letter-spacing:3px">SPORTS ACADEMY</span></span>
+  </div>
+  <div class="nav-links" id="navLinks">
+    <button onclick="showPage('home')" class="active" id="nav-home">Home</button>
+    <button onclick="showPage('about')" id="nav-about">About</button>
+    <button onclick="showPage('programs')" id="nav-programs">Programs</button>
+    <button onclick="showPage('gallery')" id="nav-gallery">Gallery</button>
+    <button onclick="showPage('contact')" id="nav-contact">Contact</button>
+    <button onclick="showPage('contact')" class="nav-enroll">Enroll Now</button>
+  </div>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     PAGE: HOME
+══════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-stripe"></div>
+    <div class="hero-content" style="padding-top:50px">
+      <div class="hero-eyebrow">Est. 2015 &nbsp;·&nbsp; Madurai, Tamil Nadu</div>
+      <h1>
+        TRAIN<br>
+        <span class="red italic">HARDER.</span><br>
+        WIN <span class="red">BIGGER.</span>
+      </h1>
+      <p class="hero-desc">
+        Champions Sports Academy — where passion meets performance. Professional coaching for football, cricket, athletics and more. Join 500+ athletes who chose excellence.
+      </p>
+      <div class="hero-btns">
+        <button class="btn-red" onclick="showPage('programs')">Explore Programs</button>
+        <button class="btn-outline" onclick="showPage('contact')">Free Trial Class</button>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">500+</div>
+          <div class="stat-label">Active Athletes</div>
+        </div>
+        <div>
+          <div class="stat-num">12+</div>
+          <div class="stat-label">Sports Programs</div>
+        </div>
+        <div>
+          <div class="stat-num">8</div>
+          <div class="stat-label">National Champions</div>
+        </div>
+        <div>
+          <div class="stat-num">10</div>
+          <div class="stat-label">Years Strong</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRAMS PREVIEW -->
+  <section style="padding-top:80px">
+    <div class="section-tag reveal">Our Programs</div>
+    <div class="section-title reveal">TRAIN IN YOUR <span>SPORT</span></div>
+    <div class="programs-grid">
+      <div class="prog-card reveal">
+        <span class="prog-icon">⚽</span>
+        <h3>Football</h3>
+        <p>Complete football training — dribbling, passing, tactics & match play. Coached by former state-level players.</p>
+        <span class="prog-age">Ages 6–22</span>
+      </div>
+      <div class="prog-card reveal">
+        <span class="prog-icon">🏏</span>
+        <h3>Cricket</h3>
+        <p>Batting, bowling & fielding — individual skill camps to full team coaching. Net practice & video analysis.</p>
+        <span class="prog-age">Ages 8–25</span>
+      </div>
+      <div class="prog-card reveal">
+        <span class="prog-icon">🏃</span>
+        <h3>Athletics</h3>
+        <p>Sprint, long jump, high jump & relay. Professional track facility with certified athletics coaches.</p>
+        <span class="prog-age">Ages 10–24</span>
+      </div>
+      <div class="prog-card reveal">
+        <span class="prog-icon">🏊</span>
+        <h3>Swimming</h3>
+        <p>Beginner to competitive swimming. Olympic-size pool, certified instructors, flexible batch timings.</p>
+        <span class="prog-age">Ages 4–Adults</span>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px">
+      <button class="btn-red" onclick="showPage('programs')">View All Programs</button>
+    </div>
+  </section>
+
+  <!-- COACHES STRIP -->
+  <section style="background:var(--dark);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div class="section-tag reveal">Expert Coaches</div>
+    <div class="section-title reveal">LEARN FROM THE <span>BEST</span></div>
+    <div class="coaches-grid">
+      <div class="coach-card reveal">
+        <div class="coach-avatar">👨</div>
+        <div class="coach-name">Rajesh Kumar</div>
+        <div class="coach-role">Head Football Coach</div>
+        <div class="coach-bio">Former Tamil Nadu state player. 15+ years of coaching experience. UEFA B License holder.</div>
+        <div class="coach-exp">15 <span>yrs exp</span></div>
+      </div>
+      <div class="coach-card reveal">
+        <div class="coach-avatar">👩</div>
+        <div class="coach-name">Priya Sathish</div>
+        <div class="coach-role">Athletics Director</div>
+        <div class="coach-bio">National-level sprinter. SAI certified athletics coach. Trained 3 national-level athletes.</div>
+        <div class="coach-exp">12 <span>yrs exp</span></div>
+      </div>
+      <div class="coach-card reveal">
+        <div class="coach-avatar">👨</div>
+        <div class="coach-name">Arjun Selvam</div>
+        <div class="coach-role">Cricket Head Coach</div>
+        <div class="coach-bio">BCCI Level-2 certified. Ex-Ranji Trophy player. Specialist in batting technique and strategy.</div>
+        <div class="coach-exp">18 <span>yrs exp</span></div>
+      </div>
+      <div class="coach-card reveal">
+        <div class="coach-avatar">👩</div>
+        <div class="coach-name">Deepa Nair</div>
+        <div class="coach-role">Swimming Coach</div>
+        <div class="coach-bio">State swimming champion. Red Cross certified water safety instructor. Specialist in competitive swimming.</div>
+        <div class="coach-exp">10 <span>yrs exp</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section style="text-align:center;background:radial-gradient(ellipse at center,rgba(232,0,29,0.12) 0%,transparent 70%)">
+    <div class="reveal">
+      <p style="font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;letter-spacing:3px;color:var(--red);text-transform:uppercase;margin-bottom:16px">Free Trial Available</p>
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;text-transform:uppercase;margin-bottom:20px">READY TO START YOUR <span style="color:var(--red)">JOURNEY?</span></h2>
+      <p style="color:var(--muted);margin-bottom:36px;max-width:500px;margin-inline:auto">Join Champions Sports Academy today. First trial class is completely free — no commitment needed.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+        <button class="btn-red" onclick="showPage('contact')">Book Free Trial</button>
+        <a class="btn-outline" href="https://wa.me/919025569406?text=Hi!%20I%20want%20to%20book%20a%20free%20trial%20class." target="_blank">💬 WhatsApp Us</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE: ABOUT
+══════════════════════════════════════ -->
+<div class="page" id="page-about">
+  <div style="padding-top:120px"></div>
+  <section>
+    <div class="about-layout">
+      <div class="about-visual reveal">
+        <div class="about-big-num">10</div>
+        <div class="about-card">
+          <div class="about-card-title">10 YEARS OF <span>EXCELLENCE</span></div>
+          <p style="font-size:0.88rem;color:var(--muted);line-height:1.8;margin-bottom:20px">Champions Sports Academy was founded in 2015 with a single mission — to give every young athlete in Tamil Nadu access to world-class coaching at affordable rates.</p>
+          <p style="font-size:0.88rem;color:var(--muted);line-height:1.8">Today we are one of Madurai's most trusted sports institutions, having trained hundreds of state and national level athletes.</p>
+          <div class="about-achievements">
+            <div class="achieve-item"><div class="achieve-num">500+</div><div class="achieve-text">Athletes Trained</div></div>
+            <div class="achieve-item"><div class="achieve-num">8</div><div class="achieve-text">National Champs</div></div>
+            <div class="achieve-item"><div class="achieve-num">12</div><div class="achieve-text">Programs</div></div>
+            <div class="achieve-item"><div class="achieve-num">15+</div><div class="achieve-text">Expert Coaches</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="about-text reveal">
+        <div class="section-tag">Our Story</div>
+        <div class="section-title">WHY <span>CHAMPIONS?</span></div>
+        <p>We believe that talent alone is not enough. It takes the right environment, the right coaching, and the right mindset to turn potential into performance. That's exactly what we build here.</p>
+        <p>Our facilities span 3 acres with a professional football ground, cricket nets, athletics track, and a 25-metre swimming pool. Every facility is maintained to national standards.</p>
+        <p>We don't just train athletes — we build character, discipline, and winners for life.</p>
+        <div class="about-values">
+          <div class="value-item"><div class="value-dot"></div><span>World-Class Facilities in Madurai</span></div>
+          <div class="value-item"><div class="value-dot"></div><span>Certified & Experienced Coaches</span></div>
+          <div class="value-item"><div class="value-dot"></div><span>Structured Curriculum for All Ages</span></div>
+          <div class="value-item"><div class="value-dot"></div><span>Affordable Fees — No Hidden Costs</span></div>
+          <div class="value-item"><div class="value-dot"></div><span>Focus on Character & Discipline</span></div>
+        </div>
+        <button class="btn-red" style="margin-top:36px" onclick="showPage('contact')">Join the Academy</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE: PROGRAMS
+══════════════════════════════════════ -->
+<div class="page" id="page-programs">
+  <div style="padding-top:120px"></div>
+  <section>
+    <div class="section-tag reveal">All Programs</div>
+    <div class="section-title reveal">FIND YOUR <span>SPORT</span></div>
+    <div class="programs-grid">
+      <div class="prog-card reveal">
+        <span class="prog-icon">⚽</span>
+        <h3>Football</h3>
+        <p>From grassroots to competitive level. Covers all positions, set-pieces, and tactical awareness. Regular inter-school tournaments.</p>
+        <span class="prog-age">Ages 6–22</span>
+      </div>
+      <div class="prog-card reveal">
+        <span class="prog-icon">🏏</span>
+        <h3>Cricket</h3>
+        <p>Batting, bowling, fielding & wicket keeping. Indoor nets, video analysis, and strength & conditioning.</p>
+        <span class="prog-age">Ages 8–25</span>
+      </div>
+      <div class="prog-card reveal">
+        <span class="prog-icon">🏃</span>
+        <h3>Athletics</h3>
+        <p>100m, 200m, 400m, long jump, high jump & shot put. Rubber track, starting blocks and professional timing systems.</p>
+        <span class="prog-age">Ages 10–24</span>
+      </div>
+      <div class="prog-card reveal">
+        <span class="prog-icon">🏊</span>
+        <h3>Swimming</h3>
+        <p>Learn to swim, stroke improvement to competitive racing. 6 lanes, heated pool, early morning & evening batches.</p>
+        <span class="prog-age">Ages 4–Adults</span>
+      </div>
+      <div class="prog-card reveal">
+        <span class="prog-icon">🎾</span>
+        <h3>Tennis</h3>
+        <p>3 clay courts. Beginner, intermediate and advanced coaching. Racquet provided for first month.</p>
+        <span class="prog-age">Ages 7–Adults</span>
+      </div>
+      <div class="prog-card reveal">
+        <span class="prog-icon">🥊</span>
+        <h3>Boxing</h3>
+        <p>Fitness boxing & competitive training. Build discipline, strength and mental toughness with certified boxing coaches.</p>
+        <span class="prog-age">Ages 12–30</span>
+      </div>
+      <div class="prog-card reveal">
+        <span class="prog-icon">🏀</span>
+        <h3>Basketball</h3>
+        <p>Full-size indoor court. Individual skills to team play. Regular leagues and inter-city tournaments organized.</p>
+        <span class="prog-age">Ages 8–22</span>
+      </div>
+      <div class="prog-card reveal">
+        <span class="prog-icon">🤸</span>
+        <h3>Gymnastics</h3>
+        <p>Artistic and rhythmic gymnastics. Trained by national-level coaches. Flexible batch timings for school students.</p>
+        <span class="prog-age">Ages 4–16</span>
+      </div>
+    </div>
+
+    <!-- Fees table -->
+    <div style="margin-top:70px">
+      <div class="section-tag reveal">Transparent Pricing</div>
+      <div class="section-title reveal">PROGRAM <span>FEES</span></div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:0.9rem" class="reveal">
+          <thead>
+            <tr style="border-bottom:2px solid var(--red)">
+              <th style="text-align:left;padding:14px 16px;font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;letter-spacing:2px;color:var(--red);text-transform:uppercase">Program</th>
+              <th style="padding:14px 16px;font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;letter-spacing:2px;color:var(--red);text-transform:uppercase">Monthly</th>
+              <th style="padding:14px 16px;font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;letter-spacing:2px;color:var(--red);text-transform:uppercase">Quarterly</th>
+              <th style="padding:14px 16px;font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;letter-spacing:2px;color:var(--red);text-transform:uppercase">Annual</th>
+              <th style="padding:14px 16px;font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;letter-spacing:2px;color:var(--red);text-transform:uppercase">Timings</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02)">
+              <td style="padding:14px 16px;font-weight:600">⚽ Football</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--muted)">₹800</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--muted)">₹2,100</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--gold);font-weight:700">₹7,500</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--muted);font-size:0.8rem">6am–8am / 4pm–6pm</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border)">
+              <td style="padding:14px 16px;font-weight:600">🏏 Cricket</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--muted)">₹1,000</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--muted)">₹2,700</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--gold);font-weight:700">₹9,500</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--muted);font-size:0.8rem">5:30am–8am / 4pm–7pm</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02)">
+              <td style="padding:14px 16px;font-weight:600">🏃 Athletics</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--muted)">₹700</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--muted)">₹1,900</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--gold);font-weight:700">₹6,500</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--muted);font-size:0.8rem">5:30am–7:30am / 5pm–7pm</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border)">
+              <td style="padding:14px 16px;font-weight:600">🏊 Swimming</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--muted)">₹1,200</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--muted)">₹3,200</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--gold);font-weight:700">₹11,000</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--muted);font-size:0.8rem">6am–8am / 4pm–6pm</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02)">
+              <td style="padding:14px 16px;font-weight:600">🎾 Tennis</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--muted)">₹1,500</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--muted)">₹4,000</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--gold);font-weight:700">₹14,000</td>
+              <td style="padding:14px 16px;text-align:center;color:var(--muted);font-size:0.8rem">6am–8am / 5pm–7pm</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="color:var(--muted);font-size:0.8rem;margin-top:14px;text-align:center">* Registration fee ₹500 (one-time) · Sibling discount 10% · Annual save up to 25%</p>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE: GALLERY
+══════════════════════════════════════ -->
+<div class="page" id="page-gallery">
+  <div style="padding-top:120px"></div>
+  <section>
+    <div class="section-tag reveal">Our Moments</div>
+    <div class="section-title reveal">CHAMPIONS IN <span>ACTION</span></div>
+    <div class="gallery-grid reveal">
+      <div class="gallery-item wide g1">
+        <div class="gallery-bg">🏆</div>
+        <div class="gallery-emoji">🏆</div>
+        <div class="gallery-overlay"><div class="gallery-caption">District Championship 2024</div></div>
+      </div>
+      <div class="gallery-item tall g2">
+        <div class="gallery-bg">⚽</div>
+        <div class="gallery-emoji">⚽</div>
+        <div class="gallery-overlay"><div class="gallery-caption">Football Finals</div></div>
+      </div>
+      <div class="gallery-item g3">
+        <div class="gallery-bg">🏃</div>
+        <div class="gallery-emoji">🏃</div>
+        <div class="gallery-overlay"><div class="gallery-caption">Athletics Meet</div></div>
+      </div>
+      <div class="gallery-item g4">
+        <div class="gallery-bg">🏏</div>
+        <div class="gallery-emoji">🏏</div>
+        <div class="gallery-overlay"><div class="gallery-caption">Cricket Nets</div></div>
+      </div>
+      <div class="gallery-item wide g5">
+        <div class="gallery-bg">🥇</div>
+        <div class="gallery-emoji">🥇</div>
+        <div class="gallery-overlay"><div class="gallery-caption">Prize Distribution Ceremony</div></div>
+      </div>
+      <div class="gallery-item g6">
+        <div class="gallery-bg">🏊</div>
+        <div class="gallery-emoji">🏊</div>
+        <div class="gallery-overlay"><div class="gallery-caption">Swimming Gala</div></div>
+      </div>
+    </div>
+
+    <!-- Achievements -->
+    <div style="margin-top:70px">
+      <div class="section-tag reveal">Achievements</div>
+      <div class="section-title reveal">OUR <span>MEDALS</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2px" class="reveal">
+        <div style="background:var(--card-bg);border:1px solid var(--border);padding:30px;text-align:center">
+          <div style="font-size:2.5rem;margin-bottom:12px">🥇</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.1rem;margin-bottom:6px">State Football Champions</div>
+          <div style="font-size:0.75rem;color:var(--muted)">Under-17 · 2023</div>
+        </div>
+        <div style="background:var(--card-bg);border:1px solid var(--border);padding:30px;text-align:center">
+          <div style="font-size:2.5rem;margin-bottom:12px">🥈</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.1rem;margin-bottom:6px">National Athletics Silver</div>
+          <div style="font-size:0.75rem;color:var(--muted)">200m Sprint · 2023</div>
+        </div>
+        <div style="background:var(--card-bg);border:1px solid var(--border);padding:30px;text-align:center">
+          <div style="font-size:2.5rem;margin-bottom:12px">🏆</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.1rem;margin-bottom:6px">District Cricket Champions</div>
+          <div style="font-size:0.75rem;color:var(--muted)">Open Category · 2024</div>
+        </div>
+        <div style="background:var(--card-bg);border:1px solid var(--border);padding:30px;text-align:center">
+          <div style="font-size:2.5rem;margin-bottom:12px">🥇</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.1rem;margin-bottom:6px">State Swimming Gold</div>
+          <div style="font-size:0.75rem;color:var(--muted)">100m Freestyle · 2024</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE: CONTACT
+══════════════════════════════════════ -->
+<div class="page" id="page-contact">
+  <div style="padding-top:120px"></div>
+  <section>
+    <div class="section-tag reveal">Get In Touch</div>
+    <div class="section-title reveal">ENROLL <span>TODAY</span></div>
+    <div class="contact-layout">
+      <div class="contact-info reveal">
+        <h3>Start Your Free Trial</h3>
+        <p>Ready to begin? Contact us to schedule your free trial class. Our team will guide you to the perfect program based on your age, skill level, and goals.</p>
+        <div class="contact-detail">
+          <div class="c-icon">📍</div>
+          <div><div class="c-text-top">Address</div><div class="c-text-val">42, Sports Complex Road, Anna Nagar, Madurai – 625 020</div></div>
+        </div>
+        <div class="contact-detail">
+          <div class="c-icon">📞</div>
+          <div><div class="c-text-top">Phone</div><div class="c-text-val">+91 98765 43210</div></div>
+        </div>
+        <div class="contact-detail">
+          <div class="c-icon">⏰</div>
+          <div><div class="c-text-top">Timings</div><div class="c-text-val">Mon – Sat: 5:30 AM – 9 PM<br>Sunday: 7 AM – 12 PM</div></div>
+        </div>
+        <div class="contact-detail">
+          <div class="c-icon">✉️</div>
+          <div><div class="c-text-top">Email</div><div class="c-text-val">info@championsacademy.in</div></div>
+        </div>
+        <a class="wa-contact-btn" href="https://wa.me/919025569406?text=Hi!%20I%20want%20to%20enroll%20in%20Champions%20Sports%20Academy.%20Please%20guide%20me." target="_blank">
+          💬 &nbsp; Chat on WhatsApp
+        </a>
+
+        <!-- Map placeholder -->
+        <div style="margin-top:28px;background:var(--card-bg);border:1px solid var(--border);border-radius:4px;height:180px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">
+          <div style="font-size:2rem">🗺️</div>
+          <div style="font-size:0.78rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px">GOOGLE MAPS WILL BE EMBEDDED HERE</div>
+        </div>
+      </div>
+
+      <div class="enquiry-form reveal">
+        <h3>Enquiry Form</h3>
+        <div class="form-row">
+          <div class="form-group"><label>First Name</label><input type="text" placeholder="Arjun"/></div>
+          <div class="form-group"><label>Last Name</label><input type="text" placeholder="Kumar"/></div>
+        </div>
+        <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+91 98765 43210"/></div>
+        <div class="form-group"><label>Email</label><input type="email" placeholder="arjun@email.com"/></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Program</label>
+            <select>
+              <option value="">Select Sport</option>
+              <option>Football</option>
+              <option>Cricket</option>
+              <option>Athletics</option>
+              <option>Swimming</option>
+              <option>Tennis</option>
+              <option>Boxing</option>
+              <option>Basketball</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Age Group</label>
+            <select>
+              <option value="">Select Age</option>
+              <option>Under 10</option>
+              <option>10–14 Years</option>
+              <option>15–18 Years</option>
+              <option>18+ (Adult)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Message</label><textarea placeholder="Tell us about your sports background or any questions..."></textarea></div>
+        <button class="submit-btn" onclick="submitForm()">Send Enquiry →</button>
+        <p style="text-align:center;font-size:0.75rem;color:var(--muted);margin-top:12px">We respond within 24 hours · Free trial for all new enrollments</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="nav-logo" style="margin-bottom:16px">
+        <div class="emblem">C</div>
+        <span>CHAMPIONS<br><span style="font-size:0.7em;font-weight:600;color:var(--muted);letter-spacing:3px">SPORTS ACADEMY</span></span>
+      </div>
+      <p>Building champions since 2015. Professional sports coaching for all ages in Madurai, Tamil Nadu.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Pages</h4>
+      <a onclick="showPage('home')">Home</a>
+      <a onclick="showPage('about')">About Us</a>
+      <a onclick="showPage('programs')">Programs</a>
+      <a onclick="showPage('gallery')">Gallery</a>
+      <a onclick="showPage('contact')">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>Programs</h4>
+      <a onclick="showPage('programs')">Football</a>
+      <a onclick="showPage('programs')">Cricket</a>
+      <a onclick="showPage('programs')">Athletics</a>
+      <a onclick="showPage('programs')">Swimming</a>
+      <a onclick="showPage('programs')">Tennis</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Champions Sports Academy · Madurai, Tamil Nadu</p>
+    <p class="footer-built">Website by <a href="https://wa.me/919025569406" target="_blank">WebWings Solutions</a> · +91 9025569406</p>
+  </div>
+</footer>
+
+<script>
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    const btn = document.getElementById('nav-' + id);
+    if (btn) btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('navLinks').classList.remove('open');
+    observeReveal();
+  }
+
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+
+  function submitForm() {
+    alert('Thank you! We will contact you within 24 hours.\n\nOr WhatsApp us directly: +91 9025569406');
+  }
+
+  function observeReveal() {
+    setTimeout(() => {
+      const els = document.querySelectorAll('.reveal:not(.visible)');
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i * 80);
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.08 });
+      els.forEach(el => obs.observe(el));
+    }, 100);
+  }
+
+  // Init
+  observeReveal();
+</script>
+</body>
+</html>
